@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Memtier Benchmark Results{% endblock %}
+{% block content %}
+<h1>Memtier Benchmark Results</h1>
+<table>
+    <tr>
+        <th>Run</th>
+        <th>Spec Filename</th>
+        <th>Run Time</th>
+        <th>Errors</th>
+        <th>Status</th>
+    </tr>
+    {% for r in results %}
+    <tr>
+        <td><a href="{{ url_for('get_run', run=r.name) }}">{{ r.dirname }}</a></td>
+        <td><a href="{{ url_for('get_run_spec', run=r.name) }}">{{ r.results.get('spec_filename') }}</a></td>
+        <td>{{ '%0.2f secs' | format(r.results.get('run_time')|float) }}</td>
+        <td>{{ r.results.get('errors') }}</td>
+        <td>{{ r.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

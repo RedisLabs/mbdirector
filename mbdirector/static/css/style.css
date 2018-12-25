@@ -1,0 +1,20 @@
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: -5px -5px;
+}
+
+.flex-item {
+    border-top: 5px solid transparent;
+    width: 500px;
+    margin: 5px 5px;
+}
+
+.flex-file-link {
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 100px;
+    background-color: lightgray;
+}

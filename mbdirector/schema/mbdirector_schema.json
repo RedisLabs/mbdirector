@@ -1,0 +1,91 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://redislabs.com/mbdirector/v1",
+
+    "type": "object",
+
+    "properties": {
+        "name": {
+            "description": "Name of benchmark testcase",
+            "type": "string"
+        },
+        "configuration": {
+            "type": "object",
+            "properties": {
+                "memtier_benchmark_binary": {
+                    "type": "string",
+                    "default": "memtier_benchmark"
+                },
+                "redis_process_port": {
+                    "type": "integer",
+                    "minValue": 1,
+                    "maxValue": 65535,
+                    "default": 6379
+                }
+            }
+        },
+        "targets": {
+            "description": "List of Redis targets to provision and test against",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/target"
+            }
+        },
+        "benchmarks": {
+            "description": "List of memtier_benchmark configurations to test",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/benchmark"
+            }
+        }
+    },
+
+    "required": [ "name", "targets", "benchmarks" ],
+    "additionalItems": false,
+
+    "definitions": {
+        "target": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Name of test target",
+                    "type": "string"
+                },
+                "binary": {
+                    "description": "Redis executable file name",
+                    "type": "string"
+                },
+                "args": {
+                    "description": "Redis extra command line arguments",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [ "name", "binary", "args" ],
+            "additionalItems": false
+        },
+        "benchmark": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Name of benchmark configuration",
+                    "type": "string"
+                },
+                "args": {
+                    "description": "Memtier benchmark extra command line arguments",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [ "args" ],
+            "additionalItems": false
+        }
+    }
+}
+

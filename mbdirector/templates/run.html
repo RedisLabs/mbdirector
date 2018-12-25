@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Memtier Benchmark Results{% endblock %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+{% endblock %}
+{% block content %}
+<h1>Memtier Benchmark Results</h1>
+<h2>{{ run.name }}</h2>
+
+<div class="flex-container">
+    <div class="flex-item">
+        <canvas id="tpsChart">
+        </canvas>
+    </div>
+    <div class="flex-item">
+        <canvas id="latencyChart">
+        </canvas>
+    </div>
+    <div class="flex-item">
+        <canvas id="bandwidthChart">
+        </canvas>
+    </div>
+    {% for benchmark in run.benchmarks.itervalues() %}
+    <div class="flex-item flex-file-link">
+        <a href="{{ url_for('get_benchmark_json', run=run.name, benchmark=benchmark.name) }}"> {{ benchmark.name }} // JSON Output</a>
+    </div>
+    {% for f in benchmark.files() %}
+    <div class="flex-item flex-file-link">
+        <a href="{{ url_for('get_benchmark_file', run=run.name, benchmark=benchmark.name, filename=f) }}"> {{ benchmark.name }} // {{ f }}</a>
+    </div>
+    {% endfor %}
+    {% endfor %}
+</div>
+
+    <script>
+        var colorPalette = ["#6e3b3b", "#ac3f21", "#be6a15", "#f3cf7a"];
+        Chart.scaleService.updateScaleDefaults('linear', {
+            ticks: {
+                min: 0
+            }
+        });
+
+        function setupGraph(name, data, y_label, title) {
+            data["datasets"].forEach(function(ds, idx) {
+                ds["backgroundColor"] = colorPalette[idx % colorPalette.length];
+            });
+            var ctx = document.getElementById(name).getContext("2d");
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                options: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: title
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: y_label
+                            }
+                        }]
+                    }
+                },
+                data: data
+            });
+        }
+    </script>
+
+    <script>
+        setupGraph("tpsChart", {{ run.render_tps_stats()|tojson }}, "Ops/sec",
+            "Transaction Rate");
+        setupGraph("latencyChart", {{ run.render_latency_stats()|tojson }}, "milliseconds",
+            "Latency");
+        setupGraph("bandwidthChart", {{ run.render_bandwidth_stats()|tojson }}, "KB/sec",
+            "Throughput");
+    </script>
+
+{% endblock %}

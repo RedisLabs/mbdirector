@@ -1,0 +1,3 @@
+include mbdirector/schema/*.json
+include mbdirector/static/css/*
+include mbdirector/templates/*.html
