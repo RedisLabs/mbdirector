@@ -1,0 +1,32 @@
+{
+    "name": "sample-mbdirector-benchmark",
+    "configuration": {
+        "memtier_benchmark": {
+            "binary": "../memtier_benchmark/memtier_benchmark",
+            "threads": 1,
+            "clients": 10
+        }
+    },
+    "targets": [
+        {
+            "name": "redis-no-aof",
+            "binary": "../redis/src/redis-server",
+            "args": []
+        },
+        {
+            "name": "redis-aof-fsync-always",
+            "binary": "../redis/src/redis-server",
+            "args": ["--appendonly", "yes", "--appendfsync", "always"]
+        }
+    ],
+    "benchmarks": [
+        {
+            "name": "small-100b-values",
+            "args": ["--data-size", "100"]
+        },
+        {
+            "name": "large-4k-values",
+            "args": ["--data-size", "4000"]
+        }
+    ]
+}
