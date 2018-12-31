@@ -9,6 +9,8 @@ sessions using the memtier_benchmark tool by automating tasks such as:
 * Collecting and organizing all data, logs, etc.
 * Providing a simple web front to access data and a visual summary
 
+![Screenshot](../blob/assets/screenshot1.png?raw=true)
+
 Getting Started
 ---------------
 
