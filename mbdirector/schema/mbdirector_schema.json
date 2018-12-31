@@ -12,9 +12,10 @@
         "configuration": {
             "type": "object",
             "properties": {
-                "memtier_benchmark_binary": {
-                    "type": "string",
-                    "default": "memtier_benchmark"
+                "memtier_benchmark": {
+                    "description": "Default configuration for benchmarks",
+                    "type": "object",
+                    "$ref": "#/definitions/memtier_benchmark_config"
                 },
                 "redis_process_port": {
                     "type": "integer",
@@ -68,12 +69,51 @@
             "required": [ "name", "binary", "args" ],
             "additionalItems": false
         },
+        "memtier_benchmark_config": {
+            "type": "object",
+            "properties": {
+                "binary": {
+                    "description": "Name of memtier_benchmark binary",
+                    "type": "string"
+                },
+                "threads": {
+                    "description": "Number of threads",
+                    "type": "integer",
+                    "minValue": 1
+                },
+                "clients": {
+                    "description": "Number of clients per thread",
+                    "type": "integer",
+                    "minValue": 1
+                },
+                "pipeline": {
+                    "description": "Number of requests in pipeline",
+                    "type": "integer",
+                    "minValue": 1
+                },
+                "requests": {
+                    "description": "Number of requests to perform",
+                    "type": "integer",
+                    "minValue": 1
+                },
+                "test_time": {
+                    "description": "Time to execute the benchmark (seconds)",
+                    "type": "integer",
+                    "minValue": 1
+                }
+            }
+        },
         "benchmark": {
             "type": "object",
             "properties": {
                 "name": {
                     "description": "Name of benchmark configuration",
                     "type": "string"
+                },
+                "configuration": {
+                    "description": "Configuration to override defaults",
+                    "type": "object",
+                    "$ref": "#/definitions/memtier_benchmark_config"
                 },
                 "args": {
                     "description": "Memtier benchmark extra command line arguments",

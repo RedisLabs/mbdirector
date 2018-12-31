@@ -4,7 +4,8 @@
         "memtier_benchmark": {
             "binary": "../memtier_benchmark/memtier_benchmark",
             "threads": 1,
-            "clients": 10
+            "clients": 10,
+            "test_time": 5
         }
     },
     "targets": [

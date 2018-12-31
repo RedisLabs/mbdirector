@@ -5,6 +5,7 @@ Setup and tear down test targets.
 import os.path
 import subprocess
 import time
+import logging
 
 import redis
 
@@ -41,6 +42,7 @@ class RedisProcessTarget(object):
                                                 'redis.log')]
 
     def setup(self):
+        logging.debug('  Command: %s', ' '.join(self.args))
         self.process = subprocess.Popen(
             stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             executable=self.binary, args=self.args)
@@ -77,7 +79,7 @@ class RedisProcessTarget(object):
         while retries:
             try:
                 return self._get_conn().ping()
-            except redis.ConnectionError:
+            except redis.RedisError:
                 retries -= 1
                 if not retries:
                     raise

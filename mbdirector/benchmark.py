@@ -1,5 +1,6 @@
 import os.path
 import subprocess
+import logging
 
 class Benchmark(object):
     def __init__(self, config, **kwargs):
@@ -20,6 +21,12 @@ class Benchmark(object):
             self.args += ['--threads', str(self.config.mb_threads)]
         if self.config.mb_clients is not None:
             self.args += ['--clients', str(self.config.mb_clients)]
+        if self.config.mb_pipeline is not None:
+            self.args += ['--pipeline', str(self.config.mb_pipeline)]
+        if self.config.mb_requests is not None:
+            self.args += ['--requests', str(self.config.mb_requests)]
+        if self.config.mb_test_time is not None:
+            self.args += ['--test-time', str(self.config.mb_test_time)]
 
         self.args += kwargs['args']
 
@@ -28,6 +35,7 @@ class Benchmark(object):
         return cls(config, **json)
 
     def run(self):
+        logging.debug('  Command: %s', ' '.join(self.args))
         process = subprocess.Popen(
             stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             executable=self.binary, args=self.args)

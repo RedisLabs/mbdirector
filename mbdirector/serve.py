@@ -122,7 +122,7 @@ def get_run_results():
     except OSError:
         pass
 
-    return [RunResults(d) for d in dirs]
+    return [RunResults(d) for d in sorted(dirs)]
 
 @app.route('/')
 def index():

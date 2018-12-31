@@ -20,15 +20,16 @@
         <canvas id="bandwidthChart">
         </canvas>
     </div>
+</div>
+<div class="flex-container">
     {% for benchmark in run.benchmarks.itervalues() %}
-    <div class="flex-item flex-file-link">
-        <a href="{{ url_for('get_benchmark_json', run=run.name, benchmark=benchmark.name) }}"> {{ benchmark.name }} // JSON Output</a>
+    <div class="flex-item flex-report-item">
+        <span class="report-name">{{ benchmark.name }}</span>
+        <li><a href="{{ url_for('get_benchmark_json', run=run.name, benchmark=benchmark.name) }}">JSON Output</a></li>
+        {% for f in benchmark.files() %}
+        <li><a href="{{ url_for('get_benchmark_file', run=run.name, benchmark=benchmark.name, filename=f) }}">{{ f }}</a></li>
+        {% endfor %}
     </div>
-    {% for f in benchmark.files() %}
-    <div class="flex-item flex-file-link">
-        <a href="{{ url_for('get_benchmark_file', run=run.name, benchmark=benchmark.name, filename=f) }}"> {{ benchmark.name }} // {{ f }}</a>
-    </div>
-    {% endfor %}
     {% endfor %}
 </div>
 

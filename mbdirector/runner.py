@@ -9,16 +9,20 @@ from mbdirector.benchmark import Benchmark
 class RunConfig(object):
     next_id = 1
 
-    def __init__(self, base_results_dir, name, config):
+    def __init__(self, base_results_dir, name, config, benchmark_config):
         self.id = RunConfig.next_id
         RunConfig.next_id += 1
 
         self.redis_process_port = config.get('redis_process_port', 6379)
 
         mbconfig = config.get('memtier_benchmark', {})
+        mbconfig.update(benchmark_config.get('configuration', {}))
         self.mb_binary = mbconfig.get('binary', 'memtier_benchmark')
         self.mb_threads = mbconfig.get('threads')
         self.mb_clients = mbconfig.get('clients')
+        self.mb_pipeline = mbconfig.get('pipeline')
+        self.mb_requests = mbconfig.get('requests')
+        self.mb_test_time = mbconfig.get('test_time')
 
         self.results_dir = os.path.join(base_results_dir,
                                         '{:04}_{}'.format(self.id, name))
@@ -43,7 +47,8 @@ class Runner(object):
         logging.info('===== Running benchmark "%s" =====', name)
 
         config = RunConfig(self.base_results_dir, name,
-                           self.spec['configuration'])
+                           self.spec['configuration'],
+                           benchmark_json.get('configuration', {}))
         os.makedirs(config.results_dir)
 
         # Write benchmark info

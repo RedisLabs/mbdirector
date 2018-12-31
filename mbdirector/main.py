@@ -14,7 +14,7 @@ from jsonschema import validate
 from mbdirector.runner import Runner
 from mbdirector.serve import run_webserver
 
-def config_logging(log_filename):
+def config_logging(log_filename, loglevel):
     formatter = logging.Formatter(
         fmt='%(asctime)s %(levelname)s %(message)s')
 
@@ -27,7 +27,7 @@ def config_logging(log_filename):
     root_logger = logging.getLogger()
     root_logger.addHandler(stdout_handler)
     root_logger.addHandler(file_handler)
-    root_logger.setLevel(logging.INFO)
+    root_logger.setLevel(getattr(logging, loglevel.upper()))
 
 @click.group()
 def cli():
@@ -36,7 +36,10 @@ def cli():
 @cli.command()
 @click.option('--spec', '-s', required=True, type=file,
               help='Benchmark specifications')
-def benchmark(spec):
+@click.option('--loglevel', '-l', default='info',
+              type=click.Choice(['debug', 'info', 'error']),
+              help='Benchmark specifications')
+def benchmark(spec, loglevel):
     schema_file = pkg_resources.resource_filename(
         'mbdirector', 'schema/mbdirector_schema.json')
     try:
@@ -61,7 +64,8 @@ def benchmark(spec):
     base_results_dir = os.path.join(
         'results', '{}Z'.format(datetime.datetime.utcnow().isoformat()))
     os.makedirs(base_results_dir)
-    config_logging(os.path.join(base_results_dir, 'mbdirector.log'))
+    config_logging(os.path.join(base_results_dir, 'mbdirector.log'),
+                   loglevel)
 
     _runner = Runner(base_results_dir, spec.name, spec_json)
     _runner.run()
