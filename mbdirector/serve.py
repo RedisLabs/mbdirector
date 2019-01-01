@@ -76,8 +76,14 @@ class RunResults(object):
         except ValueError:
             self.status = self.INVALID
 
+    def get_benchmarks(self):
+        try:
+            return self.benchmarks.itervalues()
+        except AttributeError:
+            return self.benchmarks.values()
+
     def get_benchmark_labels(self):
-        return [b.name for b in self.benchmarks.itervalues()]
+        return [b.name for b in self.get_benchmarks()]
 
     def __render_dataset(self, benchmark, section_key_list):
         return {
@@ -93,7 +99,7 @@ class RunResults(object):
             'datasets': [self.__render_dataset(b, [('Totals', 'Ops/sec'),
                                                    ('Gets', 'Ops/sec'),
                                                    ('Sets', 'Ops/sec')])
-                         for b in self.benchmarks.itervalues()]
+                         for b in self.get_benchmarks()]
         }
 
     def render_latency_stats(self):
@@ -102,7 +108,7 @@ class RunResults(object):
             'datasets': [self.__render_dataset(b, [('Totals', 'Latency'),
                                                    ('Gets', 'Latency'),
                                                    ('Sets', 'Latency')])
-                         for b in self.benchmarks.itervalues()]
+                         for b in self.get_benchmarks()]
         }
 
     def render_bandwidth_stats(self):
@@ -111,7 +117,7 @@ class RunResults(object):
             'datasets': [self.__render_dataset(b, [('Totals', 'KB/sec'),
                                                    ('Gets', 'KB/sec'),
                                                    ('Sets', 'KB/sec')])
-                         for b in self.benchmarks.itervalues()]
+                         for b in self.get_benchmarks()]
         }
 
 

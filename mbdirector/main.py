@@ -34,7 +34,7 @@ def cli():
     pass
 
 @cli.command()
-@click.option('--spec', '-s', required=True, type=file,
+@click.option('--spec', '-s', required=True, type=click.File('r'),
               help='Benchmark specifications')
 @click.option('--loglevel', '-l', default='info',
               type=click.Choice(['debug', 'info', 'error']),

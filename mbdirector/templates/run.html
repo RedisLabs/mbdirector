@@ -22,7 +22,7 @@
     </div>
 </div>
 <div class="flex-container">
-    {% for benchmark in run.benchmarks.itervalues() %}
+    {% for benchmark in run.get_benchmarks() %}
     <div class="flex-item flex-report-item">
         <span class="report-name">{{ benchmark.name }}</span>
         <li><a href="{{ url_for('get_benchmark_json', run=run.name, benchmark=benchmark.name) }}">JSON Output</a></li>
