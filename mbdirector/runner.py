@@ -2,6 +2,7 @@ import os
 import logging
 import time
 import json
+from fnmatch import fnmatch
 
 from mbdirector.target import Target
 from mbdirector.benchmark import Benchmark
@@ -34,9 +35,12 @@ class RunConfig(object):
 
 
 class Runner(object):
-    def __init__(self, base_results_dir, spec_filename, spec):
+    def __init__(self, base_results_dir, spec_filename, spec,
+                 skip_benchmarks, skip_targets):
         self.spec_filename = spec_filename
         self.spec = spec
+        self.skip_benchmarks = skip_benchmarks
+        self.skip_targets = skip_targets
         self.base_results_dir = base_results_dir
         self.start_time = None
         self.end_time = None
@@ -91,12 +95,32 @@ class Runner(object):
                                'spec.json'), 'w') as sfile:
             json.dump(self.spec, sfile)
 
+    def should_skip_benchmark(self, benchmark):
+        for pattern in self.skip_benchmarks:
+            if fnmatch(benchmark['name'], pattern):
+                return True
+        return False
+
+    def should_skip_target(self, target):
+        for pattern in self.skip_targets:
+            if fnmatch(target['name'], pattern):
+                return True
+        return False
+
     def run(self):
         self.write_spec()
         self.start_time = time.time()
 
         for benchmark in self.spec['benchmarks']:
+            if self.should_skip_benchmark(benchmark):
+                logging.info('Skipping benchmark: %s', benchmark['name'])
+                continue
+
             for target in self.spec['targets']:
+                if self.should_skip_target(target):
+                    logging.info('Skipping target: %s', target['name'])
+                    continue
+
                 self.run_benchmark(benchmark, target)
 
         self.end_time = time.time()

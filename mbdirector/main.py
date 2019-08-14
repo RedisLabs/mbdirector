@@ -39,7 +39,11 @@ def cli():
 @click.option('--loglevel', '-l', default='info',
               type=click.Choice(['debug', 'info', 'error']),
               help='Benchmark specifications')
-def benchmark(spec, loglevel):
+@click.option('--skip-benchmarks', multiple=True,
+              help='Specify benchmarks to skip')
+@click.option('--skip-targets', multiple=True,
+              help='Specify targets to skip')
+def benchmark(spec, loglevel, skip_benchmarks, skip_targets):
     schema_file = pkg_resources.resource_filename(
         'mbdirector', 'schema/mbdirector_schema.json')
     try:
@@ -67,7 +71,8 @@ def benchmark(spec, loglevel):
     config_logging(os.path.join(base_results_dir, 'mbdirector.log'),
                    loglevel)
 
-    _runner = Runner(base_results_dir, spec.name, spec_json)
+    _runner = Runner(base_results_dir, spec.name, spec_json,
+                     skip_benchmarks, skip_targets)
     _runner.run()
 
 @cli.command()
