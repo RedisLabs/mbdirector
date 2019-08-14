@@ -16,7 +16,7 @@ class RunConfig(object):
         self.redis_process_port = config.get('redis_process_port', 6379)
 
         mbconfig = config.get('memtier_benchmark', {})
-        mbconfig.update(benchmark_config.get('configuration', {}))
+        mbconfig.update(benchmark_config)
         self.mb_binary = mbconfig.get('binary', 'memtier_benchmark')
         self.mb_threads = mbconfig.get('threads')
         self.mb_clients = mbconfig.get('clients')
