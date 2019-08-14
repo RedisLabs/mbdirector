@@ -9,13 +9,15 @@ class Benchmark(object):
         self.name = kwargs['name']
 
         # Configure
-        self.args = [self.binary,
-                     '--server', '127.0.0.1',
-                     '--port', str(self.config.redis_process_port),
-                     '--out-file', os.path.join(config.results_dir,
-                                                'mb.stdout'),
-                     '--json-out-file', os.path.join(config.results_dir,
-                                                     'mb.json')]
+        self.args = [self.binary]
+        if not self.config.explicit_connect_args:
+            self.args += ['--server', '127.0.0.1',
+                          '--port', str(self.config.redis_process_port)
+                          ]
+        self.args += ['--out-file', os.path.join(config.results_dir,
+                                                 'mb.stdout'),
+                      '--json-out-file', os.path.join(config.results_dir,
+                                                      'mb.json')]
 
         if self.config.mb_threads is not None:
             self.args += ['--threads', str(self.config.mb_threads)]

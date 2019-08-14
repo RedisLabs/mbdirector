@@ -100,6 +100,11 @@
                     "description": "Time to execute the benchmark (seconds)",
                     "type": "integer",
                     "minValue": 1
+                },
+                "explicit_connect_args": {
+                    "description": "Do not automatically add host and port arguments",
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },

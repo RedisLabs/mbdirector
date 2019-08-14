@@ -23,6 +23,8 @@ class RunConfig(object):
         self.mb_pipeline = mbconfig.get('pipeline')
         self.mb_requests = mbconfig.get('requests')
         self.mb_test_time = mbconfig.get('test_time')
+        self.explicit_connect_args = bool(
+            mbconfig.get('explicit_connect_args'))
 
         self.results_dir = os.path.join(base_results_dir,
                                         '{:04}_{}'.format(self.id, name))
