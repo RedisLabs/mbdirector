@@ -36,9 +36,17 @@ class Benchmark(object):
     def from_json(cls, config, json):
         return cls(config, **json)
 
+    def write_file(self, name, data):
+        with open(os.path.join(self.config.results_dir, name), 'w') as outfile:
+            outfile.write(data)
+
     def run(self):
         logging.debug('  Command: %s', ' '.join(self.args))
         process = subprocess.Popen(
             stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             executable=self.binary, args=self.args)
+        _stdout, _stderr = process.communicate()
+        if _stderr:
+            logging.debug('  >>> stderr <<<\n%s\n', _stderr)
+            self.write_file('mb.stderr', _stderr)
         return process.wait() == 0

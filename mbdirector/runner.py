@@ -70,7 +70,7 @@ class Runner(object):
         try:
             target.setup()
         except Exception as err:
-            logging.exception('Failed to set up target')
+            logging.exception('Failed to set up target: %s' % err)
             self.errors += 1
             return
 
