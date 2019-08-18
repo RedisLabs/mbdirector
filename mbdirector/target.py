@@ -1,3 +1,19 @@
+# Copyright (C) 2019 Redis Labs Ltd.
+#
+# This file is part of mbdirector.
+#
+# mbdirector is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+#
+# mbdirector is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with memtier_benchmark.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 Setup and tear down test targets.
 """
@@ -8,6 +24,7 @@ import time
 import logging
 
 import redis
+
 
 class Target(object):
     """
@@ -21,6 +38,7 @@ class Target(object):
         Create a specific subclass from a generic json spec.
         """
         return RedisProcessTarget(config, **json)
+
 
 class RedisProcessTarget(object):
     """
@@ -75,6 +93,7 @@ class RedisProcessTarget(object):
                     time.sleep(interval)
                 else:
                     raise
+
     def _ping(self, retries=20, interval=0.2):
         while retries:
             try:
@@ -84,4 +103,3 @@ class RedisProcessTarget(object):
                 if not retries:
                     raise
                 time.sleep(interval)
-

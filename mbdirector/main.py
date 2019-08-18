@@ -1,3 +1,19 @@
+# Copyright (C) 2019 Redis Labs Ltd.
+#
+# This file is part of mbdirector.
+#
+# mbdirector is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+#
+# mbdirector is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with memtier_benchmark.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 Main module.
 """
@@ -14,6 +30,7 @@ from jsonschema import validate
 from mbdirector.runner import Runner
 from mbdirector.serve import run_webserver
 
+
 def config_logging(log_filename, loglevel):
     formatter = logging.Formatter(
         fmt='%(asctime)s %(levelname)s %(message)s')
@@ -29,9 +46,11 @@ def config_logging(log_filename, loglevel):
     root_logger.addHandler(file_handler)
     root_logger.setLevel(getattr(logging, loglevel.upper()))
 
+
 @click.group()
 def cli():
     pass
+
 
 @cli.command()
 @click.option('--spec', '-s', required=True, type=click.File('r'),
@@ -53,7 +72,7 @@ def benchmark(spec, loglevel, skip_benchmarks, skip_targets):
         sys.exit(1)
 
     try:
-       spec_json = json.load(spec)
+        spec_json = json.load(spec)
     except Exception as err:
         click.echo('Error: failed to spec: {}: {}'.format(
             spec.name, err))
@@ -74,6 +93,7 @@ def benchmark(spec, loglevel, skip_benchmarks, skip_targets):
     _runner = Runner(base_results_dir, spec.name, spec_json,
                      skip_benchmarks, skip_targets)
     _runner.run()
+
 
 @cli.command()
 @click.option('--bind', '-b', required=False, default='127.0.0.1',

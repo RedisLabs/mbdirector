@@ -1,3 +1,19 @@
+# Copyright (C) 2019 Redis Labs Ltd.
+#
+# This file is part of mbdirector.
+#
+# mbdirector is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+#
+# mbdirector is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with memtier_benchmark.  If not, see <http://www.gnu.org/licenses/>.
+
 import os.path
 import json
 
@@ -5,11 +21,14 @@ from flask import (Flask, render_template, send_file, abort, Response,
                    send_from_directory)
 from werkzeug.serving import run_simple
 
+
 class Config(object):
     RESULTS_BASEDIR = 'results'
 
+
 app = Flask(__name__)
 app.config.from_object('mbdirector.serve.Config')
+
 
 class BenchmarkResults(object):
     def __init__(self, dirname):
@@ -40,6 +59,7 @@ class BenchmarkResults(object):
         result = [f for f in all_files
                   if os.path.exists(os.path.join(self.dirname, f))]
         return result
+
 
 class RunResults(object):
     OK = 'ok'
@@ -130,13 +150,16 @@ def get_run_results():
 
     return [RunResults(d) for d in sorted(dirs)]
 
+
 @app.route('/')
 def index():
     return render_template('index.html', results=get_run_results())
 
+
 @app.route('/run/<run>')
 def get_run(run):
     return render_template('run.html', run=RunResults(run))
+
 
 @app.route('/run/<run>/spec')
 def get_run_spec(run):
@@ -144,22 +167,25 @@ def get_run_spec(run):
         app.config['RESULTS_BASEDIR'], run, 'spec.json'), 'r')
     return send_file(specfile, mimetype='text/plain')
 
+
 @app.route('/run/<run>/<benchmark>/json')
 def get_benchmark_json(run, benchmark):
     run = RunResults(run)
-    if not benchmark in run.benchmarks:
+    if benchmark not in run.benchmarks:
         abort(404)
     return Response(run.benchmarks[benchmark].print_json(),
                     mimetype='text/plan')
 
+
 @app.route('/run/<run>/<benchmark>/file/<filename>')
 def get_benchmark_file(run, benchmark, filename):
     run = RunResults(run)
-    if not benchmark in run.benchmarks:
+    if benchmark not in run.benchmarks:
         abort(404)
     return send_from_directory(
         os.path.abspath(run.benchmarks[benchmark].dirname),
         filename, mimetype='text/plan')
+
 
 def run_webserver(bind, port):
     run_simple(bind, port, app)
