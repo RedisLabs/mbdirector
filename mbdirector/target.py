@@ -49,14 +49,17 @@ class RedisProcessTarget(object):
         self.binary = kwargs['binary']
         self.args = [self.binary] + list(kwargs['args'])
         self.config = config
+        self.skip_ping = kwargs.get('skip_ping_on_setup', False)
+        self.auto_port_bind_args = kwargs.get('auto_port_bind_args', True)
         self.name = kwargs['name']
         self.process = None
         self._conn = None
 
         # Configure Redis
-        self.args += ['--port', str(config.redis_process_port),
-                      '--bind', '127.0.0.1',
-                      '--logfile', os.path.join(config.results_dir,
+        if self.auto_port_bind_args:
+            self.args += ['--port', str(config.redis_process_port),
+                          '--bind', '127.0.0.1']
+        self.args += ['--logfile', os.path.join(config.results_dir,
                                                 'redis.log')]
 
     def setup(self):
@@ -64,7 +67,10 @@ class RedisProcessTarget(object):
         self.process = subprocess.Popen(
             stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             executable=self.binary, args=self.args)
-        self._ping()
+        if self.skip_ping:
+            time.sleep(1)
+        else:
+            self._ping()
 
     def teardown(self):
         if self.process is not None:

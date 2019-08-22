@@ -64,6 +64,16 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "auto_port_bind_args": {
+                    "description": "If true, bind/port automatic arguments are appended.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "skip_ping_on_setup": {
+                    "description": "If true, mbdirector does not use ping to validate server is up but simply waits 1 second after startup.",
+                    "type": "boolean",
+                    "default": false
                 }
             },
             "required": [ "name", "binary", "args" ],
