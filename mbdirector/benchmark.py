@@ -54,7 +54,10 @@ class Benchmark(object):
         return cls(config, **json)
 
     def write_file(self, name, data):
-        with open(os.path.join(self.config.results_dir, name), 'w') as outfile:
+        mode = 'w'
+        if type(data)==bytes:
+            mode = 'wb'
+        with open(os.path.join(self.config.results_dir, name), mode) as outfile:
             outfile.write(data)
 
     def run(self):
