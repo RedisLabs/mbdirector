@@ -15,7 +15,7 @@ setup(
     install_requires=[
         'jsonschema==2.6.0',
         'click==7.0',
-        'redis==2.10.6',
+        'redis==3.5.3',
         'Flask==1.0.2'
     ],
     entry_points='''
