@@ -16,7 +16,7 @@ setup(
         'jsonschema==2.6.0',
         'click==7.0',
         'redis==3.5.3',
-        'Flask==1.0.2'
+        'Flask==2.3.2'
     ],
     entry_points='''
         [console_scripts]
