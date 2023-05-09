@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mbdirector"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+license = "GPL"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.1.3"
+redis = "^4.5.5"
+Flask = "^2.3.2"
+jsonschema = "^4.17.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+mbdirector = "mbdirector.main:cli"

@@ -13,10 +13,10 @@ setup(
                        'templates/*']
     },
     install_requires=[
-        'jsonschema==2.6.0',
-        'click==7.0',
-        'redis==3.5.3',
-        'Flask==1.0.2'
+        'jsonschema==4.17.3',
+        'click==8.1.3',
+        'redis==4.5.5',
+        'Flask==2.3.2'
     ],
     entry_points='''
         [console_scripts]
